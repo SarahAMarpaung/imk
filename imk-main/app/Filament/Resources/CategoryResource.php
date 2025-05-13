@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BrandResource\Pages;
-use App\Filament\Resources\BrandResource\RelationManagers;
-use App\Models\Brand;
+use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Models\Category;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
@@ -24,11 +24,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class BrandResource extends Resource
+class CategoryResource extends Resource
 {
-    protected static ?string $model = Brand::class;
+    protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-computer-desktop';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
     {
@@ -48,11 +48,12 @@ class BrandResource extends Resource
                                 ->disabled()
                                 ->required()
                                 ->dehydrated()
-                                ->unique(Brand::class, 'slug', ignoreRecord: true),
+                                ->unique(Category::class, 'slug', ignoreRecord: true),
                         ]),
-
+                    
                     FileUpload::make('image')
-                        ->directory('brands'),
+                        ->image()
+                        ->directory('categories'),
 
                     Toggle::make('is_active')
                         ->required()
@@ -67,12 +68,12 @@ class BrandResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                
+
                 Tables\Columns\ImageColumn::make('image'),
 
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
-            
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
 
@@ -80,13 +81,13 @@ class BrandResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                    
-                Tables\Columns\TextColumn::make('updated_at')
+                
+                    Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([ 
+            ->filters([
                 //
             ])
             ->actions([
@@ -95,6 +96,7 @@ class BrandResource extends Resource
                     EditAction::make(),
                     DeleteAction::make(),
                 ])
+                
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -113,9 +115,9 @@ class BrandResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBrands::route('/'),
-            'create' => Pages\CreateBrand::route('/create'),
-            'edit' => Pages\EditBrand::route('/{record}/edit'),
+            'index' => Pages\ListCategories::route('/'),
+            'create' => Pages\CreateCategory::route('/create'),
+            'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
 }

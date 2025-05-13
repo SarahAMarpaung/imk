@@ -42,7 +42,7 @@ class BrandResource extends Resource
                                 ->maxLength(255)
                                 ->live(onBlur:true)
                                 ->afterStateUpdated(fn (string $operation, $state, Set $set) => $operation === 'create'? $set('slug', Str::slug($state)) : null),
-
+                                
                             TextInput::make('slug')
                                 ->maxLength(255)
                                 ->disabled()
@@ -50,8 +50,9 @@ class BrandResource extends Resource
                                 ->dehydrated()
                                 ->unique(Brand::class, 'slug', ignoreRecord: true),
                         ]),
-
+                    
                     FileUpload::make('image')
+                        ->image()
                         ->directory('brands'),
 
                     Toggle::make('is_active')
@@ -86,7 +87,7 @@ class BrandResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([ 
+            ->filters([
                 //
             ])
             ->actions([
